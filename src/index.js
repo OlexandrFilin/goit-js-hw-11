@@ -12,7 +12,7 @@ const elements = {
 };
 
 const { formEl, containerEl, btnLoadEl } = elements;
-const imgPerPage = 12;
+const imgPerPage = 40;
 let currentPage;
 let totalImg;
 formEl.searchQuery.value = 'Филин';
@@ -26,12 +26,12 @@ let options = {
   rootMargin: '200px',
   // threshold: 0.1,
 };
-let callback = function (entries, observer) {
+let handlerInfiniteScroll = function (entries, observer) {
   console.log('afdfsdgfsdfgdfgs');
   /* Content excerpted, show below */
   getNextPage();
 };
-let observer = new IntersectionObserver(callback, options);
+let observer = new IntersectionObserver(handlerInfiniteScroll, options);
 function handlerSubmit(e) {
   e.preventDefault();
   currentPage = 0;
@@ -64,6 +64,7 @@ function getNextPage() {
 
       showElm(btnLoadEl, true);
       markupResults(data.hits);
+      observer.observe(elements.guardEl);
     })
     .catch(error => {
       console.log('Помилка: ', error);
