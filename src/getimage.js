@@ -14,7 +14,7 @@ async function fetchColectImg(strSearch, pageNumber, perPage) {
     per_page: perPage,
   });
   const response = await axios.get(`${BASE_URL_PIXABAY}?${param.toString()}`);
-
+  console.log(response);
   if (!response.data) {
     throw new Error(response.status);
   }

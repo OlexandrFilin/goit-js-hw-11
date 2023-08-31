@@ -12,12 +12,7 @@ const elements = {
 };
 
 const { formEl, containerEl, btnLoadEl } = elements;
-let instLightBox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
-
-const imgPerPage = 40;
+const imgPerPage = 12;
 let currentPage;
 let totalImg;
 formEl.searchQuery.value = 'Филин';
@@ -26,20 +21,30 @@ btnLoadEl.addEventListener('click', handlerLoadNextPage);
 function handlerLoadNextPage() {
   getNextPage();
 }
-
-const handlLoadMore = function (entries, observer) {
-  // console.log('afdfsdgfsdfgdfgs');
+let options = {
+  //  root: null,
+  rootMargin: '200px',
+  // threshold: 0.1,
+};
+let callback = function (entries, observer) {
+  console.log('afdfsdgfsdfgdfgs');
   /* Content excerpted, show below */
   getNextPage();
 };
-const observer = new IntersectionObserver(handlLoadMore, {
-  rootMargin: '100px',
-});
+let observer = new IntersectionObserver(callback, options);
 function handlerSubmit(e) {
   e.preventDefault();
   currentPage = 0;
 
   getNextPage();
+  console.log('befor observe');
+  console.log('currentPage * imgPerPage ', currentPage * imgPerPage);
+  console.log('totalImg', totalImg);
+
+  if (currentPage * imgPerPage < totalImg) {
+    console.log('On observe');
+    observer.observe(elements.guardEl);
+  }
 }
 
 function getNextPage() {
@@ -47,7 +52,10 @@ function getNextPage() {
   fetchColectImg(formEl.searchQuery.value, currentPage, imgPerPage)
     .then(response => {
       const data = response.data;
+      console.log('11111resp', response);
+
       totalImg = data.total;
+      console.log('totalImg', totalImg);
       if (!totalImg) {
         throw new Error(
           'Sorry, there are no images matching your search query. Please try again.'
@@ -56,12 +64,9 @@ function getNextPage() {
 
       showElm(btnLoadEl, true);
       markupResults(data.hits);
-      if (currentPage * imgPerPage < totalImg) {
-        observer.observe(elements.guardEl);
-      }
     })
     .catch(error => {
-      // console.log('Помилка: ', error);
+      console.log('Помилка: ', error);
       showError(error);
     });
 }
@@ -73,10 +78,18 @@ function showElm(elem, show) {
     elem.classList.add('js-load-more');
 }
 function markupResults(arr) {
+  // webformatURL - посилання на маленьке зображення для списку карток.
+  // largeImageURL - посилання на велике зображення.
+  // tags - рядок з описом зображення. Підійде для атрибуту alt.
+  // likes - кількість лайків.
+  // views - кількість переглядів.
+  // comments - кількість коментарів.
+  // downloads - кількість завантажень.
   const valueDefault = {
     urlImg:
       'https://t3.ftcdn.net/jpg/04/60/01/36/240_F_460013622_6xF8uN6ubMvLx0tAJECBHfKPoNOR5cRa.jpg',
   };
+
   const markapCard = arr
     .map(
       ({
@@ -89,7 +102,8 @@ function markupResults(arr) {
         downloads,
       }) => {
         return ` <div class="photo-card">
-   <a href="${largeImageURL}  " class ="gallery__link">
+
+   <a href="${largeImageURL || valueDefault.urlImg}  " class ="gallery__link">
       <img
         width="300"
 
@@ -119,18 +133,25 @@ function markupResults(arr) {
             </p>
           </div>
         </div>
+
   `;
       }
     )
     .join('');
+  // console.log(currentPage);
+  // console.log(imgPerPage);
+  // console.log('output ', currentPage * imgPerPage);
+  // console.log('total ', totalImg);
   if (currentPage === 1) {
     containerEl.innerHTML = markapCard;
   } else {
     containerEl.insertAdjacentHTML('beforeend', markapCard);
   }
-  console.log(instLightBox);
-  instLightBox.refresh();
   showOrHideBtnLoad();
+  const galery = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
 }
 function showOrHideBtnLoad() {
   if (currentPage * imgPerPage >= totalImg) {
@@ -147,6 +168,7 @@ function showError(msg) {
       background: '#e02525',
     },
   });
+
   Notiflix.Report.warning(
     'Sorry, there are no images matching your search query. Please try again.',
     msg,
