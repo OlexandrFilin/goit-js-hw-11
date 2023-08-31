@@ -8,7 +8,25 @@
     <script type="module" src="./index.js"></script>
   </head>
   <body>
+    <form class="search-form" id="search-form">
+      <div class="div-input">
+        <!-- <h2 class="search-h">Search img</h2> -->
+        <input
+          class="input-search"
+          type="text"
+          name="searchQuery"
+          autocomplete="off"
+          placeholder="Search images..."
+        />
+        <button type="submit" class="btn-submit"></button>
+      </div>
+    </form>
+    <div class="gallery"></div>
+    <div class="js-guard"></div>
+
+    <button type="button" class="load-more js-load-more">Load more</button>
+
     <!-- ❗️❗️❗️ Add partials like so for every page -->
-    <include src="./partials/example.html"></include>
+    <!-- <include src="./partials/example.html"></include> -->
   </body>
 </html>
