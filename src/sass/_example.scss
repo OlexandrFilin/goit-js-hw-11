@@ -129,8 +129,10 @@ b {
 .js-load-more{
   display: none;
 }
-// .div-photo {
-//   width: 350px;
-//   height: 200px;
+.scroll-up{
+  position: fixed;
+    left: 30px;
+    top: 60px;
+     display: inline-block;
 
-// }
+ }
