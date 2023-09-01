@@ -22,6 +22,7 @@ const { formEl, containerEl, btnLoadEl, btnScrollUp } = elements;
 const imgPerPage = 40;
 let currentPage;
 let totalImg;
+let showMarkap;
 
 formEl.addEventListener('submit', handlerSubmit);
 btnLoadEl.addEventListener('click', handlerLoadNextPage);
@@ -32,13 +33,15 @@ function handlerLoadNextPage() {
 let handlerInfiniteScroll = function (entries, observer) {
   getNextPage();
 };
+
 let observer = new IntersectionObserver(handlerInfiniteScroll, {
   rootMargin: '200px',
 });
+
 function handlerSubmit(e) {
   e.preventDefault();
   currentPage = 0;
-
+  showMarkap = true;
   getNextPage();
   if (currentPage * imgPerPage < totalImg) {
     // console.log('On observe');
@@ -57,20 +60,23 @@ function getNextPage() {
           'Sorry, there are no images matching your search query. Please try again.'
         );
       }
+      // показуємо кількість тільки для першої завантаженої сторінки
       if (currentPage === 1) {
-        Notify.info(`Hooray! We found ${data.total}images.`, {
+        Notify.info(`Hooray! We found ${data.total} images.`, {
           timeout: 10000,
           showOnlyTheLastOne: true,
           //position: 'center-top',
         });
       }
 
-      markupResults(data.hits);
-      showElm(btnLoadEl, true);
-      showOrHideBtnLoad();
-      //  showMessage(data.hits);
-      galLerySimL.refresh();
-      observer.observe(elements.guardEl);
+      if (showMarkap) {
+        markupResults(data.hits);
+        showOrHideBtnLoad();
+        showElm(btnLoadEl, true);
+        //  showMessage(data.hits);
+        galLerySimL.refresh();
+        observer.observe(elements.guardEl);
+      }
     })
     .catch(error => {
       //console.log('errpr ', error);
@@ -152,9 +158,17 @@ function markupResults(arr) {
     containerEl.insertAdjacentHTML('beforeend', markapCard);
   }
 }
+
 function showOrHideBtnLoad() {
+  // console.log(' all input', currentPage * imgPerPage);
+  // console.log('of all', totalImg);
   if (currentPage * imgPerPage >= totalImg) {
+    showMarkap = false;
     showElm(btnLoadEl, false);
+    // console.log('END PHOTO');
+    Notify.info("We're sorry, but you've reached the end of search results.", {
+      showOnlyTheLastOne: true,
+    });
   }
 }
 //window.addEventListener('scroll', onClickScroll);
