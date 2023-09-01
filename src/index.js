@@ -7,6 +7,20 @@ import Notiflix, { Notify } from 'notiflix';
 //   captionsData: 'alt',
 //   captionDelay: 250,
 // });
+// const anchors = document.querySelectorAll('a[href ="#"]')
+const anchors = document.querySelectorAll('a');
+console.log(anchors);
+// for (let anchor of anchors) {
+//   anchor.addEventListener('click', function (e) {
+//     e.preventDefault()
+
+//     const blockID = anchor.getAttribute('href').substr(1)
+
+//     document.getElementById(blockID).scrollIntoView({
+//       behavior: 'smooth',
+//       block: 'start'
+//     })
+//   })
 
 const elements = {
   formEl: document.querySelector('.search-form'),
@@ -78,16 +92,6 @@ function getNextPage() {
       Notify.failure(error.message);
     });
 }
-// function showMessage(ar) {
-//   ar.length ? Notify.success(`Hooray! We found ${totalHits}images.`) :
-//     Notify.failure('Sorry, there are no images matching your search query. Please try again.');
-//   // if (ar.length) {
-//   // );
-//   // } else {
-//   //   Notify.failure(
-
-//   //   );
-//   }
 
 function showElm(elem, show) {
   if (show || elem.classList.contains('js-load-more')) {
@@ -96,13 +100,6 @@ function showElm(elem, show) {
     elem.classList.add('js-load-more');
 }
 function markupResults(arr) {
-  // webformatURL - посилання на маленьке зображення для списку карток.
-  // largeImageURL - посилання на велике зображення.
-  // tags - рядок з описом зображення. Підійде для атрибуту alt.
-  // likes - кількість лайків.
-  // views - кількість переглядів.
-  // comments - кількість коментарів.
-  // downloads - кількість завантажень.
   const valueDefault = {
     urlImg:
       'https://t3.ftcdn.net/jpg/04/60/01/36/240_F_460013622_6xF8uN6ubMvLx0tAJECBHfKPoNOR5cRa.jpg',
@@ -189,3 +186,12 @@ function showError(msg) {
   );
   showOrHideBtnLoad();
 }
+
+// const { height: cardHeight } = document
+//   .querySelector('.gallery')
+//   .firstElementChild.getBoundingClientRect();
+
+// window.scrollBy({
+//   top: cardHeight * 2,
+//   behavior: 'smooth',
+// });
