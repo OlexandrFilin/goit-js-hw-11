@@ -22,7 +22,7 @@ const { formEl, containerEl, btnLoadEl, btnScrollUp } = elements;
 const imgPerPage = 40;
 let currentPage;
 let totalImg;
-formEl.searchQuery.value = 'kosmos';
+
 formEl.addEventListener('submit', handlerSubmit);
 btnLoadEl.addEventListener('click', handlerLoadNextPage);
 function handlerLoadNextPage() {
