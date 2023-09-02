@@ -18,24 +18,29 @@ formEl.addEventListener('submit', handlerSubmit);
 btnLoadEl.addEventListener('click', handlerLoadNextPage);
 function handlerLoadNextPage() {
   getNextPage();
+
 }
 let handlerInfiniteScroll = function (entries, observer) {
-  getNextPage();
-};
+   entries.forEach((entry) => {
+    if (entry.isIntersecting){
+       getNextPage();
+    }
+ 
+    });
+}
+
 let observer = new IntersectionObserver(handlerInfiniteScroll, {
-  rootMargin: '200px',
+  rootMargin: '300px',
 });
 function handlerSubmit(e) {
   e.preventDefault();
   currentPage = 0;
   showMarkap = true;
   getNextPage();
-  if (currentPage * imgPerPage < totalImg) {
-    observer.observe(elements.guardEl);
-  }
-}
+
+ }
 function getNextPage() {
-  currentPage += 1;
+    currentPage += 1;
   fetchColectImg(formEl.searchQuery.value, currentPage, imgPerPage)
     .then(response => {
       const data = response.data;
@@ -49,14 +54,16 @@ function getNextPage() {
         Notify.info(`Hooray! We found ${data.total} images.`, {
           timeout: 10000,
           showOnlyTheLastOne: true,
-        });
+        });      
       }
+      
+     
       if (showMarkap) {
         markupResults(data.hits);
         showOrHideBtnLoad();
-        showElm(btnLoadEl, true);
-        initSimpleLightbox();
-        observer.observe(elements.guardEl);
+        
+       initSimpleLightbox();
+        observer.observe(elements.guardEl);   
       }
     })
     .catch(error => {
@@ -67,8 +74,10 @@ function getNextPage() {
 }
 function showElm(elem, show) {
   if (show && elem.classList.contains('js-load-more')) {
+
     elem.classList.remove('js-load-more');
   } else if (!show && !elem.classList.contains('js-load-more')) {
+
     elem.classList.add('js-load-more');
   }
 }
@@ -129,6 +138,7 @@ function markupResults(arr) {
   }
 }
 function showOrHideBtnLoad() {
+
   if (currentPage * imgPerPage >= totalImg) {
     showMarkap = false;
     showElm(btnLoadEl, false);
