@@ -12,6 +12,9 @@ body{
 
 //розмітка форми !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 .search-form{
+position: fixed;
+z-index: 100;
+width: 100%;
  height: var(--high-input); 
 //  background-color: blue;
   background-image: linear-gradient(to left,

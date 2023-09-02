@@ -18,15 +18,13 @@ formEl.addEventListener('submit', handlerSubmit);
 btnLoadEl.addEventListener('click', handlerLoadNextPage);
 function handlerLoadNextPage() {
   getNextPage();
-
 }
 let handlerInfiniteScroll = function (entries, observer) {
    entries.forEach((entry) => {
     if (entry.isIntersecting){
        getNextPage();
     }
- 
-    });
+  });
 }
 
 let observer = new IntersectionObserver(handlerInfiniteScroll, {
@@ -40,6 +38,10 @@ function handlerSubmit(e) {
 
  }
 function getNextPage() {
+if (!showMarkap) {
+  return;
+}
+
     currentPage += 1;
   fetchColectImg(formEl.searchQuery.value, currentPage, imgPerPage)
     .then(response => {
@@ -57,14 +59,11 @@ function getNextPage() {
         });      
       }
       
-     
-      if (showMarkap) {
-        markupResults(data.hits);
+         markupResults(data.hits);
         showOrHideBtnLoad();
-        
-       initSimpleLightbox();
+        initSimpleLightbox();
         observer.observe(elements.guardEl);   
-      }
+   
     })
     .catch(error => {
       Notify.failure(error.message, { showOnlyTheLastOne: true });
