@@ -7,25 +7,28 @@ const elements = {
   containerEl: document.querySelector('.gallery'),
   btnLoadEl: document.querySelector('.load-more'),
   guardEl: document.querySelector('.js-guard'),
+  typeScrollEl: document.querySelector('#scroll_select'),
 };
-const { formEl, containerEl, btnLoadEl } = elements;
+
+const { formEl, containerEl, btnLoadEl, typeScrollEl } = elements;
 const imgPerPage = 40;
 let currentPage;
 let totalImg;
 let showMarkap;
 let gallerySimL;
+
 formEl.addEventListener('submit', handlerSubmit);
 btnLoadEl.addEventListener('click', handlerLoadNextPage);
 function handlerLoadNextPage() {
   getNextPage();
 }
 let handlerInfiniteScroll = function (entries, observer) {
-   entries.forEach((entry) => {
-    if (entry.isIntersecting){
-       getNextPage();
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      getNextPage();
     }
   });
-}
+};
 
 let observer = new IntersectionObserver(handlerInfiniteScroll, {
   rootMargin: '300px',
@@ -35,16 +38,17 @@ function handlerSubmit(e) {
   currentPage = 0;
   showMarkap = true;
   getNextPage();
-
- }
-function getNextPage() {
-if (!showMarkap) {
-  return;
 }
+function getNextPage() {
+ 
+  if (!showMarkap) {
+    return;
+  }
 
-    currentPage += 1;
+  currentPage += 1;
   fetchColectImg(formEl.searchQuery.value, currentPage, imgPerPage)
-    .then(response => {
+    .then(response => { 
+     
       const data = response.data;
       totalImg = data.total;
       if (!totalImg) {
@@ -52,19 +56,27 @@ if (!showMarkap) {
           'Sorry, there are no images matching your search query. Please try again.'
         );
       }
+
       if (currentPage === 1) {
         Notify.info(`Hooray! We found ${data.total} images.`, {
           timeout: 10000,
           showOnlyTheLastOne: true,
-        });      
+        });
       }
-      
-         markupResults(data.hits);
-        showOrHideBtnLoad();
-        initSimpleLightbox();
-        observer.observe(elements.guardEl);   
-   
+
+      markupResults(data.hits);
+       initSimpleLightbox();
+     
+
+      if (typeScrollEl.value === 'ifs') {
+            observer.observe(elements.guardEl);
+      } else { 
+        showElm(btnLoadEl, true);
+         
+      };
+      showOrHideBtnLoad();
     })
+    
     .catch(error => {
       Notify.failure(error.message, { showOnlyTheLastOne: true });
       containerEl.innerHTML = '';
@@ -73,10 +85,8 @@ if (!showMarkap) {
 }
 function showElm(elem, show) {
   if (show && elem.classList.contains('js-load-more')) {
-
     elem.classList.remove('js-load-more');
   } else if (!show && !elem.classList.contains('js-load-more')) {
-
     elem.classList.add('js-load-more');
   }
 }
@@ -137,7 +147,6 @@ function markupResults(arr) {
   }
 }
 function showOrHideBtnLoad() {
-
   if (currentPage * imgPerPage >= totalImg) {
     showMarkap = false;
     showElm(btnLoadEl, false);
