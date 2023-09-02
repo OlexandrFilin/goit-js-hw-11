@@ -16,13 +16,24 @@ let currentPage;
 let totalImg;
 let showMarkap;
 let gallerySimL;
+let observer = new IntersectionObserver(handlerInfiniteScroll, {
+  rootMargin: '300px',
+});
 
 formEl.addEventListener('submit', handlerSubmit);
 btnLoadEl.addEventListener('click', handlerLoadNextPage);
+typeScrollEl/addEventListener('change',handlerShangeScroll);
+function handlerShangeScroll(){
+  containerEl.innerHTML ='';
+  currentPage =0;
+  showMarkap = false;
+  observer.disconnect();
+  //IntersectionObserver.disconnect();
+}
 function handlerLoadNextPage() {
   getNextPage();
 }
-let handlerInfiniteScroll = function (entries, observer) {
+function handlerInfiniteScroll(entries, observer) {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       getNextPage();
@@ -30,14 +41,13 @@ let handlerInfiniteScroll = function (entries, observer) {
   });
 };
 
-let observer = new IntersectionObserver(handlerInfiniteScroll, {
-  rootMargin: '300px',
-});
+
 function handlerSubmit(e) {
   e.preventDefault();
   currentPage = 0;
   showMarkap = true;
   getNextPage();
+
 }
 function getNextPage() {
  
