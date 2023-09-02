@@ -28,7 +28,7 @@ function handlerShangeScroll(){
   currentPage =0;
   showMarkap = false;
   observer.disconnect();
-  //IntersectionObserver.disconnect();
+  showElm(btnLoadEl, false);
 }
 function handlerLoadNextPage() {
   getNextPage();
